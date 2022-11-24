@@ -38,7 +38,7 @@ export default {
   // 변이(Mutations)가 아닌 나머지 모든 로직을 관리합니다.
   // 비동기로 동작합니다.
   actions: {
-    async searchMovies({state, commit }, payload) {
+    async searchMovies({ state, commit }, payload) {
       // const { title, type, number, year } = payload
       if (state.loading) return
 
@@ -52,10 +52,7 @@ export default {
           ...payload,
           page: 1
         })
-        const {
-          Search,
-          totalResults
-        } = res.data
+        const { Search, totalResults } = res.data
         commit('updateState', {
           movies: _uniqBy(Search, 'imdbID')
         })
@@ -72,9 +69,7 @@ export default {
               ...payload,
               page
             })
-            const {
-              Search
-            } = res.data
+            const { Search } = res.data
             commit('updateState', {
               movies: [
                 ...state.movies,
@@ -83,9 +78,7 @@ export default {
             })
           }
         }
-      } catch ({
-        message
-      }) {
+      } catch ({ message }) {
         commit('updateState', {
           movies: [],
           message
@@ -96,7 +89,7 @@ export default {
         })
       }
     },
-    async searchMovieWithId({state,commit}, payload) {
+    async searchMovieWithId({ state, commit }, payload) {
       // const { id } = payload
       if (state.loading) return
 
@@ -123,23 +116,7 @@ export default {
   }
 }
 
-function _fetchMovie(payload){
-  const { title, type, year, page, id } = payload;
-  const OMDB_API_KEY='56a30d45'
-  const url = id 
-      ? `https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&i=${id}`
-      :`https://www.omdbapi.com/?apikey=${OMDB_API_KEY}&s=${title}&type=${type}&y=${year}&page=${page}`;
-
-  return new Promise((resolve, reject) => {
-    axios.get(url)
-      .then((res)=> {
-        if (res.data.Error){ // 아무 검색어 없이 엔터입력 시 에러처리
-          reject(res.data.Error);
-        }
-        resolve(res);
-      })
-      .catch((err)=> {
-        reject(err.message);
-      });
-  });
+// eslint-disable-next-line
+async function _fetchMovie(payload) {
+  return await axios.post('/.netlify/functions/movie', payload)
 }

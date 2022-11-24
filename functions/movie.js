@@ -4,7 +4,7 @@ const { OMDB_API_KEY } = process.env;
 exports.handler = async function (event) {
   const payload = JSON.parse(event.body);
   const { title, type, year, page, id } = payload;
-
+  
   console.log('OMDB_API_KEY: ', OMDB_API_KEY);
   console.log('params: ', payload);
 
